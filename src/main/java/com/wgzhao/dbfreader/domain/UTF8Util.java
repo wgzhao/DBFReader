@@ -1,0 +1,47 @@
+/*
+ * SafeOnline project.
+ *
+ * Copyright 2006-2013 Lin.k N.V. All rights reserved.
+ * Lin.k N.V. proprietary/confidential. Use is subject to license terms.
+ */
+
+package com.wgzhao.dbfreader.domain;
+
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
+
+/**
+ * User: gvhoecke <gianni.vanhoecke@lin-k.net>
+ * Date: 27/11/13
+ * Time: 13:09
+ */
+public class UTF8Util
+{
+
+    public static Charset charset = StandardCharsets.UTF_8;
+    public static CharsetEncoder encoder = charset.newEncoder();
+    public static CharsetDecoder decoder = charset.newDecoder();
+
+    public static String utf8(byte[] input)
+            throws CharacterCodingException
+    {
+
+        String value = new String(input);
+
+        value = Normalizer.normalize(value, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+
+        return decoder.decode(encoder.encode(CharBuffer.wrap(value))).toString();
+    }
+
+    static {
+
+        decoder.onMalformedInput(CodingErrorAction.IGNORE);
+        decoder.onUnmappableCharacter(CodingErrorAction.IGNORE);
+    }
+}

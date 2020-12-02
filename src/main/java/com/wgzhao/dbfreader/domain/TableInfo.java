@@ -2,7 +2,7 @@
  * Copyright 2006-2013 Lin.k N.V. All rights reserved.
  */
 
-package com.giannivanhoecke.dbfreader.domain;
+package com.wgzhao.dbfreader.domain;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,7 +12,9 @@ import java.util.Date;
  * Date: 16/10/13
  * Time: 11:37
  */
-public class TableInfo implements Serializable {
+public class TableInfo
+        implements Serializable
+{
 
     private String name;
     private Date lastModifiedDate;
@@ -20,7 +22,8 @@ public class TableInfo implements Serializable {
     private int records;
     private String version;
 
-    public TableInfo( String name, Date lastModifiedDate, int columns, int records, String version ) {
+    public TableInfo(String name, Date lastModifiedDate, int columns, int records, String version)
+    {
 
         this.name = name;
         this.lastModifiedDate = lastModifiedDate;
@@ -29,52 +32,62 @@ public class TableInfo implements Serializable {
         this.version = version;
     }
 
-    public String getName() {
+    public String getName()
+    {
 
         return name;
     }
 
-    public void setName( String name ) {
+    public void setName(String name)
+    {
 
         this.name = name;
     }
 
-    public Date getLastModifiedDate() {
+    public Date getLastModifiedDate()
+    {
 
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate( Date lastModifiedDate ) {
+    public void setLastModifiedDate(Date lastModifiedDate)
+    {
 
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public int getColumns() {
+    public int getColumns()
+    {
 
         return columns;
     }
 
-    public void setColumns( int columns ) {
+    public void setColumns(int columns)
+    {
 
         this.columns = columns;
     }
 
-    public int getRecords() {
+    public int getRecords()
+    {
 
         return records;
     }
 
-    public void setRecords( int records ) {
+    public void setRecords(int records)
+    {
 
         this.records = records;
     }
 
-    public String getVersion() {
+    public String getVersion()
+    {
 
         return version;
     }
 
-    public void setVersion( String version ) {
+    public void setVersion(String version)
+    {
 
         this.version = version;
     }

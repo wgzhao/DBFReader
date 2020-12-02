@@ -15,22 +15,24 @@ Requirements
 
 * Java 1.6+
 
-Download
+Compile
 --------
 
-Latest version (v0.2 - 2013-11-28):
+```shell
+git clone https://github.com/wgzhao/dbfreader.git
+cd dbfreader
+mvn clean package
+```
 
-* [Executable Jar](https://github.com/giannivh/DBFReader/releases/download/v0.2/dbf-reader-0.2.jar)
-* [Mac App](https://github.com/giannivh/DBFReader/releases/download/v0.2/dbf-reader-0.2.dmg)
-
-Older versions:
-
-* [v0.1 Executable Jar](https://github.com/giannivh/DBFReader/releases/download/v0.1/dbf-reader-0.1.jar) (2013-10-18)
-* [v0.1 Mac App](https://github.com/giannivh/DBFReader/releases/download/v0.1/dbf-reader-0.1.dmg) (2013-10-18)
+Run
+----
+```shell
+java -jar target/dbf-reader-*.jar
+```
 
 Screen shots
 ------------
 
-![Screen shot 1](https://raw.github.com/giannivh/DBFReader/master/ScreenShot1.png "Screen shot 1")
+![Screen shot 1](https://raw.github.com/wgzhao/DBFReader/master/ScreenShot1.png "Screen shot 1")
 
-![Screen shot 2](https://raw.github.com/giannivh/DBFReader/master/ScreenShot2.png "Screen shot 2")
+![Screen shot 2](https://raw.github.com/wgzhao/DBFReader/master/ScreenShot2.png "Screen shot 2")

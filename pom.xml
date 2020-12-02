@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,9 +11,9 @@
         Written in Java.
     </description>
 
-    <groupId>com.giannivanhoecke</groupId>
+    <groupId>com.wgzhao</groupId>
     <artifactId>dbf-reader</artifactId>
-    <version>GIT-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <inceptionYear>2013</inceptionYear>
     <packaging>jar</packaging>
 
@@ -37,9 +37,9 @@
     <!-- CODE MANAGEMENT -->
     <scm>
         <tag>HEAD</tag>
-        <url>https://git@github.com/giannivh/DBFReader</url>
-        <connection>scm:git:ssh://git@github.com/giannivh/DBFReader</connection>
-        <developerConnection>scm:git:ssh://git@github.com/giannivh/DBFReader</developerConnection>
+        <url>https://git@github.com/wgzhao/DBFReader</url>
+        <connection>scm:git:ssh://git@github.com/wgzhao/DBFReader</connection>
+        <developerConnection>scm:git:ssh://git@github.com/wgzhao/DBFReader</developerConnection>
     </scm>
 
     <build>
@@ -54,8 +54,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -82,6 +82,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>jar-with-dependencies</id>
@@ -92,7 +93,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>com.giannivanhoecke.dbfreader.DBFReader</mainClass>
+                                    <mainClass>com.wgzhao.dbfreader.DBFReader</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>
@@ -109,9 +110,9 @@
                 <artifactId>osxappbundle-maven-plugin</artifactId>
                 <version>1.0-alpha-2</version>
                 <configuration>
-                    <mainClass>com.giannivanhoecke.dbfreader.DBFReader</mainClass>
+                    <mainClass>com.wgzhao.dbfreader.DBFReader</mainClass>
                     <iconFile>src/main/resources/database.icns</iconFile>
-                    <jvmVersion>1.6+</jvmVersion>
+                    <jvmVersion>1.8+</jvmVersion>
                     <javaApplicationStub>src/main/resources/JavaApplicationStub</javaApplicationStub>
                     <additionalResources>
                         <fileSet>
@@ -134,33 +135,13 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>giannivanhoecke</id>
-            <url>http://maven.giannivanhoecke.com/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencies>
-
+        <!--https://mvnrepository.com/artifact/nl.knaw.dans.common/dans-dbf-lib -->
         <dependency>
             <groupId>nl.knaw.dans.common</groupId>
             <artifactId>dans-dbf-lib</artifactId>
             <version>1.0.0-beta-10</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.giannivanhoecke.jupdate-checker</groupId>
-            <artifactId>jupdate-checker-core</artifactId>
-            <version>0.1</version>
-        </dependency>
-
     </dependencies>
 
 </project>
