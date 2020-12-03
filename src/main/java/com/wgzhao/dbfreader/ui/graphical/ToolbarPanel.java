@@ -8,7 +8,6 @@ import com.wgzhao.dbfreader.domain.Controller;
 import com.wgzhao.dbfreader.domain.Utils;
 
 import javax.imageio.ImageIO;
-import javax.rmi.CORBA.Util;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
