@@ -4,7 +4,6 @@
 
 package com.wgzhao.dbfreader.domain;
 
-import nl.knaw.dans.common.dbflib.CorruptedTableException;
 import nl.knaw.dans.common.dbflib.DbfLibException;
 import nl.knaw.dans.common.dbflib.Field;
 import nl.knaw.dans.common.dbflib.IfNonExistent;
@@ -26,7 +25,7 @@ public class TableLoader
         implements Runnable
 {
 
-    private File path;
+    private final File path;
 
     public TableLoader(File path)
     {
@@ -54,7 +53,7 @@ public class TableLoader
             }
 
             //Variables
-            List<String> headerNames = new ArrayList<String>();
+            List<String> headerNames = new ArrayList<>();
 
             Controller.INSTANCE.clearTable();
 
@@ -107,7 +106,7 @@ public class TableLoader
                         to));
 
                 Record record = table.getRecordAt(j);
-                List<String> recordValues = new ArrayList<String>();
+                List<String> recordValues = new ArrayList<>();
 
                 for (Field field : fields) {
 
@@ -130,7 +129,7 @@ public class TableLoader
                             case NUMBER:
                             default:
 
-                                recordValues.add(rawValue == null ? "" : new String(rawValue).trim());
+                                recordValues.add(new String(rawValue).trim());
 
                                 break;
 
@@ -169,19 +168,7 @@ public class TableLoader
                 Controller.INSTANCE.setProgress((int) Math.floor(((double) count++ / (double) total) * 100.0));
             }
         }
-        catch (CorruptedTableException e) {
-
-            Controller.INSTANCE.setTableInfo(null);
-            Controller.INSTANCE.setPath(null);
-            Controller.INSTANCE.errorOccurred(e);
-        }
-        catch (IOException e) {
-
-            Controller.INSTANCE.setTableInfo(null);
-            Controller.INSTANCE.setPath(null);
-            Controller.INSTANCE.errorOccurred(e);
-        }
-        catch (DbfLibException e) {
+        catch (IOException | DbfLibException e) {
 
             Controller.INSTANCE.setTableInfo(null);
             Controller.INSTANCE.setPath(null);

@@ -91,22 +91,16 @@ public class GUIPanelContainer
     public void setUIEnabled(final boolean enabled)
     {
 
-        SwingUtilities.invokeLater(new Runnable()
-        {
+        SwingUtilities.invokeLater(() -> {
 
-            @Override
-            public void run()
-            {
+            toolbarPanel.setUIEnabled(enabled);
+            tablePanel.setUIEnabled(enabled);
 
-                toolbarPanel.setUIEnabled(enabled);
-                tablePanel.setUIEnabled(enabled);
-
-                if (enabled) {
-                    setCursor(Cursor.getDefaultCursor());
-                }
-                else {
-                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                }
+            if (enabled) {
+                setCursor(Cursor.getDefaultCursor());
+            }
+            else {
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             }
         });
     }

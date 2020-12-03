@@ -25,7 +25,7 @@ public class SQLExporter
         implements Runnable
 {
 
-    private File target;
+    private final File target;
 
     public SQLExporter(File target)
     {

@@ -26,7 +26,7 @@ public enum Controller
     public static final String TITLE = "DBF Reader";
 
     private String title;
-    private List<UI> observers;
+    private final List<UI> observers;
 
     //DBF
     private File path;

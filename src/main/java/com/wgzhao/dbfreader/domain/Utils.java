@@ -4,6 +4,9 @@
 
 package com.wgzhao.dbfreader.domain;
 
+import javax.swing.JFileChooser;
+
+import java.io.File;
 import java.nio.charset.CharacterCodingException;
 
 /**
@@ -15,6 +18,7 @@ public class Utils
 {
 
     public static final String NEW_LINE = System.getProperty("line.separator");
+    private static String lastDir = null;
 
     public static String toHumanReadableByteCount(long size)
     {
@@ -61,5 +65,17 @@ public class Utils
     {
 
         return string.replace("'", "\\'");
+    }
+
+    public static JFileChooser getFileChooser() {
+        if(lastDir != null) {
+            return new JFileChooser(lastDir);
+        } else {
+            return new JFileChooser();
+        }
+    }
+
+    public static void setLastDir(File file) {
+        lastDir = file.getParent();
     }
 }

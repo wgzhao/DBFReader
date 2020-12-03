@@ -8,6 +8,7 @@ import com.wgzhao.dbfreader.domain.Controller;
 import com.wgzhao.dbfreader.domain.Utils;
 
 import javax.imageio.ImageIO;
+import javax.rmi.CORBA.Util;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -21,12 +22,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.prefs.Preferences;
 
 /**
  * User: gvhoecke <gianni.vanhoecke@lin-k.net>
@@ -37,18 +37,14 @@ public class ToolbarPanel
         extends JPanel
 {
 
-    private JFrame parent;
-    private JToolBar toolBar;
+    private final JFrame parent;
     private JButton openButton;
     private JButton backButton;
     private JButton nextButton;
-    private JButton exitButton;
     private JLabel indexLabel;
     private JButton infoButton;
     private JButton searchButton;
     private JButton clearSearchButton;
-    private JButton checkForUpdatesButton;
-    private JButton aboutButton;
     private JButton exportButton;
 
     public ToolbarPanel(JFrame parent)
@@ -61,13 +57,12 @@ public class ToolbarPanel
 
     public void initLayout()
     {
-
         try {
 
             this.setLayout(new BorderLayout(0, 0));
 
             //Init toolbar
-            toolBar = new JToolBar();
+            JToolBar toolBar = new JToolBar();
             add(toolBar, BorderLayout.CENTER);
 
             //Open buttons
@@ -77,39 +72,34 @@ public class ToolbarPanel
                     new ImageIcon(
                             ImageIO.read(getClass().getResource("/mono_icons/folder32.png"))));
             toolBar.add(openButton);
-            openButton.addActionListener(new ActionListener()
-            {
+            openButton.addActionListener(event -> {
+                JFileChooser fileChooser = Utils.getFileChooser();
 
-                public void actionPerformed(ActionEvent event)
+                fileChooser.setDialogTitle("Select your dBASE file");
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.setAcceptAllFileFilterUsed(false);
+                fileChooser.setFileFilter(new FileFilter()
                 {
 
-                    JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home"));
+                    @Override
+                    public boolean accept(File f)
+                    {
+                        return f.getName().toLowerCase().endsWith(".dbf");
+                    }
 
-                    fileChooser.setDialogTitle("Select your dBASE file");
-                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                    fileChooser.setAcceptAllFileFilterUsed(false);
-                    fileChooser.setFileFilter(new FileFilter()
+                    @Override
+                    public String getDescription()
                     {
 
-                        @Override
-                        public boolean accept(File f)
-                        {
-
-                            return f.getName().toLowerCase().endsWith(".dbf");
-                        }
-
-                        @Override
-                        public String getDescription()
-                        {
-
-                            return "dBASE files";
-                        }
-                    });
-
-                    if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-                        Controller.INSTANCE.loadFile(fileChooser.getSelectedFile());
+                        return "dBASE files";
                     }
+                });
+
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+                    Controller.INSTANCE.loadFile(fileChooser.getSelectedFile());
+                    Utils.setLastDir(fileChooser.getSelectedFile());
+
                 }
             });
 
@@ -124,15 +114,10 @@ public class ToolbarPanel
                             ImageIO.read(getClass().getResource("/mono_icons/leftarrow32.png"))));
             backButton.setEnabled(Controller.INSTANCE.hasPrevious());
             toolBar.add(backButton);
-            backButton.addActionListener(new ActionListener()
-            {
+            backButton.addActionListener(event -> {
 
-                public void actionPerformed(ActionEvent event)
-                {
-
-                    Controller.INSTANCE.decreaseOffset();
-                    Controller.INSTANCE.loadFromOffset();
-                }
+                Controller.INSTANCE.decreaseOffset();
+                Controller.INSTANCE.loadFromOffset();
             });
 
             //Index label
@@ -148,15 +133,10 @@ public class ToolbarPanel
                             ImageIO.read(getClass().getResource("/mono_icons/arrowright32.png"))));
             nextButton.setEnabled(Controller.INSTANCE.hasNext());
             toolBar.add(nextButton);
-            nextButton.addActionListener(new ActionListener()
-            {
+            nextButton.addActionListener(event -> {
 
-                public void actionPerformed(ActionEvent event)
-                {
-
-                    Controller.INSTANCE.incrementOffset();
-                    Controller.INSTANCE.loadFromOffset();
-                }
+                Controller.INSTANCE.incrementOffset();
+                Controller.INSTANCE.loadFromOffset();
             });
 
             //Separator
@@ -170,24 +150,10 @@ public class ToolbarPanel
                             ImageIO.read(getClass().getResource("/mono_icons/lightbulb32.png"))));
             infoButton.setEnabled(Controller.INSTANCE.hasTableSet());
             toolBar.add(infoButton);
-            infoButton.addActionListener(new ActionListener()
-            {
+            infoButton.addActionListener(event -> SwingUtilities.invokeLater(() -> {
 
-                public void actionPerformed(ActionEvent event)
-                {
-
-                    SwingUtilities.invokeLater(new Runnable()
-                    {
-
-                        @Override
-                        public void run()
-                        {
-
-                            new InfoPanelContainer(parent, true); //Owner, modal
-                        }
-                    });
-                }
-            });
+                new InfoPanelContainer(parent, true); //Owner, modal
+            }));
 
             //Search button
             searchButton = new JButton("");
@@ -197,19 +163,14 @@ public class ToolbarPanel
                             ImageIO.read(getClass().getResource("/mono_icons/search32.png"))));
             searchButton.setEnabled(Controller.INSTANCE.hasTableSet());
             toolBar.add(searchButton);
-            searchButton.addActionListener(new ActionListener()
-            {
+            searchButton.addActionListener(event -> {
 
-                public void actionPerformed(ActionEvent event)
-                {
+                String searchString = JOptionPane.showInputDialog(parent, "Please enter a keyword:", "Search",
+                        JOptionPane.QUESTION_MESSAGE);
 
-                    String searchString = JOptionPane.showInputDialog(parent, "Please enter a keyword:", "Search",
-                            JOptionPane.QUESTION_MESSAGE);
+                if (searchString != null && !searchString.trim().isEmpty()) {
 
-                    if (searchString != null && !searchString.trim().isEmpty()) {
-
-                        Controller.INSTANCE.doSearch(searchString);
-                    }
+                    Controller.INSTANCE.doSearch(searchString);
                 }
             });
 
@@ -221,15 +182,7 @@ public class ToolbarPanel
                             ImageIO.read(getClass().getResource("/mono_icons/block32.png"))));
             clearSearchButton.setEnabled(Controller.INSTANCE.isSearching());
             toolBar.add(clearSearchButton);
-            clearSearchButton.addActionListener(new ActionListener()
-            {
-
-                public void actionPerformed(ActionEvent event)
-                {
-
-                    Controller.INSTANCE.clearSearch();
-                }
-            });
+            clearSearchButton.addActionListener(event -> Controller.INSTANCE.clearSearch());
 
             //Separator
             toolBar.addSeparator();
@@ -242,47 +195,42 @@ public class ToolbarPanel
                             ImageIO.read(getClass().getResource("/mono_icons/boxupload32.png"))));
             exportButton.setEnabled(Controller.INSTANCE.hasTableSet());
             toolBar.add(exportButton);
-            exportButton.addActionListener(new ActionListener()
-            {
+            exportButton.addActionListener(event -> {
 
-                public void actionPerformed(ActionEvent event)
+                JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home"));
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                fileChooser.setSelectedFile(new File(
+                        String.format("%s_%s.sql",
+                                simpleDateFormat.format(new Date()),
+                                Utils.cleanFileName(Controller.INSTANCE.getTableInfo().getName()))
+                ));
+
+                fileChooser.setDialogTitle("Export to...");
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.setAcceptAllFileFilterUsed(false);
+                fileChooser.setFileFilter(new FileFilter()
                 {
 
-                    JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home"));
-
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
-                    fileChooser.setSelectedFile(new File(
-                            String.format("%s_%s.sql",
-                                    simpleDateFormat.format(new Date()),
-                                    Utils.cleanFileName(Controller.INSTANCE.getTableInfo().getName()))
-                    ));
-
-                    fileChooser.setDialogTitle("Export to...");
-                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                    fileChooser.setAcceptAllFileFilterUsed(false);
-                    fileChooser.setFileFilter(new FileFilter()
+                    @Override
+                    public boolean accept(File f)
                     {
 
-                        @Override
-                        public boolean accept(File f)
-                        {
-
-                            return f.getName().toLowerCase().endsWith(".sql");
-                        }
-
-                        @Override
-                        public String getDescription()
-                        {
-
-                            return "SQL files";
-                        }
-                    });
-
-                    if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-                        //OK
-                        Controller.INSTANCE.exportToSQL(fileChooser.getSelectedFile());
+                        return f.getName().toLowerCase().endsWith(".sql");
                     }
+
+                    @Override
+                    public String getDescription()
+                    {
+
+                        return "SQL files";
+                    }
+                });
+
+                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+                    //OK
+                    Controller.INSTANCE.exportToSQL(fileChooser.getSelectedFile());
                 }
             });
 
@@ -312,47 +260,26 @@ public class ToolbarPanel
 //            } );
 
             //About button
-            aboutButton = new JButton("");
+            //    private JButton checkForUpdatesButton
+            JButton aboutButton = new JButton("");
             aboutButton.setToolTipText("About");
             aboutButton.setIcon(
                     new ImageIcon(
                             ImageIO.read(getClass().getResource("/mono_icons/questionbook32.png"))));
             toolBar.add(aboutButton);
-            aboutButton.addActionListener(new ActionListener()
-            {
+            aboutButton.addActionListener(event -> SwingUtilities.invokeLater(() -> {
 
-                public void actionPerformed(ActionEvent event)
-                {
-
-                    SwingUtilities.invokeLater(new Runnable()
-                    {
-
-                        @Override
-                        public void run()
-                        {
-
-                            new AboutPanelContainer(parent, true); //Owner, modal
-                        }
-                    });
-                }
-            });
+                new AboutPanelContainer(parent, true); //Owner, modal
+            }));
 
             //Exit buttons
-            exitButton = new JButton("");
+            JButton exitButton = new JButton("");
             exitButton.setToolTipText("Exit");
             exitButton.setIcon(
                     new ImageIcon(
                             ImageIO.read(getClass().getResource("/mono_icons/stop32.png"))));
             toolBar.add(exitButton);
-            exitButton.addActionListener(new ActionListener()
-            {
-
-                public void actionPerformed(ActionEvent event)
-                {
-
-                    System.exit(0);
-                }
-            });
+            exitButton.addActionListener(event -> System.exit(0));
         }
         catch (IOException e) {
 

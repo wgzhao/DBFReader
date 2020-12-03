@@ -9,6 +9,7 @@ import com.wgzhao.dbfreader.ui.graphical.GUIPanelContainer;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 /**
  * User: gvhoecke <gianni.vanhoecke@lin-k.net>
@@ -17,35 +18,27 @@ import javax.swing.UIManager;
  */
 public class DBFReader
 {
-
     public DBFReader()
     {
 
-        SwingUtilities.invokeLater(new Runnable()
-        {
+        SwingUtilities.invokeLater(() -> {
 
-            public void run()
-            {
+            try {
 
-                try {
-
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                }
-                catch (Exception e) {
-
-                    e.printStackTrace();
-                }
-
-                GUIPanelContainer guiPanelContainer = new GUIPanelContainer();
-                Controller.INSTANCE.addObserver(guiPanelContainer);
-                guiPanelContainer.postConstruct();
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            GUIPanelContainer guiPanelContainer = new GUIPanelContainer();
+            Controller.INSTANCE.addObserver(guiPanelContainer);
+            guiPanelContainer.postConstruct();
         });
     }
 
     public static void main(String[] args)
     {
-
         new DBFReader();
     }
 }

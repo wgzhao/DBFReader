@@ -31,7 +31,7 @@ public class MyTable
     public static final int MAX_COLUMN_WIDTH = 300;
     public static final int COLUMN_SPACING = 10;
 
-    private java.awt.Color rowColors[] = new java.awt.Color[2];
+    private final java.awt.Color[] rowColors = new java.awt.Color[2];
     private boolean drawStripes = false;
 
     public MyTable()

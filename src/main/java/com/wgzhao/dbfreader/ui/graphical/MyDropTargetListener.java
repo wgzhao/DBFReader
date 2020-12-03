@@ -36,9 +36,9 @@ public class MyDropTargetListener
         implements DropTargetListener
 {
 
-    private Component component;
-    private Color originalColor;
-    private Cursor originalCursor;
+    private final Component component;
+    private final Color originalColor;
+    private final Cursor originalCursor;
 
     public MyDropTargetListener(Component component)
             throws IOException

@@ -28,7 +28,6 @@ public class TablePanel
         extends JPanel
 {
 
-    private JScrollPane scrollPane;
     private JTable table;
     private MyTableModel tableModel;
     private JLabel infoLabel;
@@ -48,14 +47,14 @@ public class TablePanel
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         infoLabel.setBorder(BorderFactory.createRaisedBevelBorder());
 
-        tableModel = new MyTableModel(new Vector(), new Vector());
+        tableModel = new MyTableModel(new Vector<>(), new Vector<>());
 
         table = new MyTable();
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setDefaultRenderer(Object.class, new MyCellRenderer());
         table.setModel(tableModel);
 
-        scrollPane = new JScrollPane(table);
+        JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
@@ -82,7 +81,7 @@ public class TablePanel
     public void setTableHeader(final java.util.List<String> names)
     {
 
-        tableModel.setColumnIdentifiers(names.toArray(new String[names.size()]));
+        tableModel.setColumnIdentifiers(names.toArray(new String[0]));
 
         //Auto resize
         int margin = 5;
@@ -112,7 +111,7 @@ public class TablePanel
     public void addRecord(final java.util.List<String> values)
     {
 
-        tableModel.addRow(values.toArray(new String[values.size()]));
+        tableModel.addRow(values.toArray(new String[0]));
     }
 
     public void setUIEnabled(boolean enabled)

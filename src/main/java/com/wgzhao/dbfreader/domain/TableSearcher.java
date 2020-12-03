@@ -25,7 +25,7 @@ public class TableSearcher
         implements Runnable
 {
 
-    private String searchString;
+    private final String searchString;
 
     public TableSearcher(String searchString)
     {
@@ -55,7 +55,7 @@ public class TableSearcher
             double recordCount = table.getRecordCount();
 
             //Variables
-            List<String> headerNames = new ArrayList<String>();
+            List<String> headerNames = new ArrayList<>();
 
             Controller.INSTANCE.clearTable();
 
@@ -79,7 +79,7 @@ public class TableSearcher
                         (int) recordCount));
 
                 Record record = table.getRecordAt(count);
-                List<String> recordValues = new ArrayList<String>();
+                List<String> recordValues = new ArrayList<>();
                 boolean hasHit = false;
 
                 for (Field field : fields) {
@@ -161,15 +161,7 @@ public class TableSearcher
             //Done
             table.close();
         }
-        catch (CorruptedTableException e) {
-
-            Controller.INSTANCE.errorOccurred(e);
-        }
-        catch (IOException e) {
-
-            Controller.INSTANCE.errorOccurred(e);
-        }
-        catch (DbfLibException e) {
+        catch (IOException | DbfLibException e) {
 
             Controller.INSTANCE.errorOccurred(e);
         }
