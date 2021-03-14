@@ -11,7 +11,7 @@
 
     <groupId>com.wgzhao</groupId>
     <artifactId>dbf-reader</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <inceptionYear>2013</inceptionYear>
     <packaging>jar</packaging>
 
@@ -34,7 +34,7 @@
 
     <!-- CODE MANAGEMENT -->
     <scm>
-        <tag>1.0.1</tag>
+        <tag>HEAD</tag>
         <url>https://git@github.com/wgzhao/DBFReader</url>
         <connection>scm:git:ssh://git@github.com/wgzhao/DBFReader</connection>
         <developerConnection>scm:git:ssh://git@github.com/wgzhao/DBFReader</developerConnection>
