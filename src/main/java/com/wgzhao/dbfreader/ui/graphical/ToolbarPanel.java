@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.prefs.Preferences;
 
 /**
  * User: gvhoecke <gianni.vanhoecke@lin-k.net>
@@ -98,7 +97,6 @@ public class ToolbarPanel
 
                     Controller.INSTANCE.loadFile(fileChooser.getSelectedFile());
                     Utils.setLastDir(fileChooser.getSelectedFile());
-
                 }
             });
 

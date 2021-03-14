@@ -4,16 +4,14 @@
 
 package com.wgzhao.dbfreader.domain;
 
-import nl.knaw.dans.common.dbflib.DbfLibException;
-import nl.knaw.dans.common.dbflib.Field;
-import nl.knaw.dans.common.dbflib.IfNonExistent;
-import nl.knaw.dans.common.dbflib.Record;
-import nl.knaw.dans.common.dbflib.Table;
+import org.jamel.dbf.DbfReader;
+import org.jamel.dbf.structure.DbfField;
+import org.jamel.dbf.structure.DbfRow;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,14 +36,11 @@ public class TableLoader
     {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Table table = new Table(path);
 
-        try {
+        try (DbfReader reader = new DbfReader(this.path)) {
 
-            table.open(IfNonExistent.ERROR);
-
-            double recordCount = table.getRecordCount();
-
+            int recordCount = reader.getRecordCount();
+            int fieldNum = reader.getHeader().getFieldsCount();
             if (Controller.INSTANCE.getOffset() > recordCount) {
 
                 Controller.INSTANCE.setOffset(Controller.INSTANCE.getOffset() - Controller.NUMBER_OF_RECORDS);
@@ -54,24 +49,24 @@ public class TableLoader
 
             //Variables
             List<String> headerNames = new ArrayList<>();
-
             Controller.INSTANCE.clearTable();
 
             //Fields & Header
-            List<Field> fields = table.getFields();
+            List<DbfField> fields = new ArrayList<>();
 
-            for (Field field : fields) {
-
-                headerNames.add(field.getName());
+            for (int i = 0; i < fieldNum; i++) {
+                DbfField dbfField = reader.getHeader().getField(i);
+                fields.add(dbfField);
+                headerNames.add(dbfField.getName());
             }
 
             //Table info
             TableInfo tableInfo = new TableInfo(
-                    table.getName(),
-                    table.getLastModifiedDate(),
+                    this.path.getName(),
+                    new Date(this.path.lastModified()),
                     fields.size(),
-                    table.getRecordCount(),
-                    table.getVersion().name());
+                    recordCount,
+                    null);
 
             Controller.INSTANCE.setTableInfo(tableInfo);
 
@@ -82,7 +77,7 @@ public class TableLoader
             int to = Controller.INSTANCE.getOffset() + Controller.NUMBER_OF_RECORDS;
             if (to >= recordCount) {
 
-                to = (int) recordCount;
+                to = recordCount;
                 Controller.INSTANCE.setNext(false);
             }
             else {
@@ -105,59 +100,38 @@ public class TableLoader
                         (j + 1),
                         to));
 
-                Record record = table.getRecordAt(j);
+                reader.seekToRecord(j);
+                DbfRow row = reader.nextRow();
                 List<String> recordValues = new ArrayList<>();
-
-                for (Field field : fields) {
-
-                    byte[] rawValue = record.getRawValue(field);
-
-                    if (rawValue == null) {
-
+                for (DbfField field : fields) {
+                    String colName = field.getName();
+                    if (row.getObject(colName) == null) {
                         recordValues.add("");
                     }
                     else {
-
-                        switch (field.getType()) {
-
-                            case CHARACTER:
-                            case GENERAL:
-                            case BINARY:
-                            case MEMO:
-                            case PICTURE:
-                            case FLOAT:
-                            case NUMBER:
-                            default:
-
-                                recordValues.add(new String(rawValue).trim());
-
+                        switch (field.getDataType()) {
+                            case CHAR:
+                                recordValues.add(row.getString(colName));
                                 break;
 
                             case LOGICAL:
-
-                                if (record.getBooleanValue(field.getName()) == null) {
-
-                                    recordValues.add("");
-                                }
-                                else {
-
-                                    recordValues.add(String.format("%s",
-                                            record.getBooleanValue(field.getName()) ? "true" : "false"));
-                                }
-
+                                recordValues.add(row.getBoolean(colName) ? "true" : "false");
                                 break;
 
                             case DATE:
+                                recordValues.add(simpleDateFormat.format(row.getDate(colName)));
+                                break;
 
-                                if (record.getDateValue(field.getName()) == null) {
+                            case NUMERIC:
+                                recordValues.add(row.getBigDecimal(colName).toPlainString());
+                                break;
 
-                                    recordValues.add("");
-                                }
-                                else {
+                            case FLOAT:
+                                recordValues.add(String.format("%f", row.getFloat(colName)));
+                                break;
 
-                                    recordValues.add(
-                                            simpleDateFormat.format(record.getDateValue(field.getName())));
-                                }
+                            default:
+                                recordValues.add(row.getObject(colName).toString());
                                 break;
                         }
                     }
@@ -168,29 +142,11 @@ public class TableLoader
                 Controller.INSTANCE.setProgress((int) Math.floor(((double) count++ / (double) total) * 100.0));
             }
         }
-        catch (IOException | DbfLibException e) {
-
-            Controller.INSTANCE.setTableInfo(null);
-            Controller.INSTANCE.setPath(null);
-            Controller.INSTANCE.errorOccurred(e);
-        }
         finally {
-
-            try {
-
-                table.close();
-            }
-            catch (IOException e) {
-
-                Controller.INSTANCE.errorOccurred(e);
-            }
-            finally {
-
-                //Done
-                Controller.INSTANCE.setStatusText("Ready");
-                Controller.INSTANCE.setProgress(100);
-                Controller.INSTANCE.setUIEnabled(true);
-            }
+            //Done
+            Controller.INSTANCE.setStatusText("Ready");
+            Controller.INSTANCE.setProgress(100);
+            Controller.INSTANCE.setUIEnabled(true);
         }
     }
 }

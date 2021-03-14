@@ -24,10 +24,8 @@ public enum Controller
 
     public static final int NUMBER_OF_RECORDS = 5000;
     public static final String TITLE = "DBF Reader";
-
-    private String title;
     private final List<UI> observers;
-
+    private String title;
     //DBF
     private File path;
     private int offset;

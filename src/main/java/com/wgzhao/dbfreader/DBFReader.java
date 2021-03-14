@@ -9,7 +9,6 @@ import com.wgzhao.dbfreader.ui.graphical.GUIPanelContainer;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 
 /**
  * User: gvhoecke <gianni.vanhoecke@lin-k.net>

@@ -67,15 +67,18 @@ public class Utils
         return string.replace("'", "\\'");
     }
 
-    public static JFileChooser getFileChooser() {
-        if(lastDir != null) {
+    public static JFileChooser getFileChooser()
+    {
+        if (lastDir != null) {
             return new JFileChooser(lastDir);
-        } else {
+        }
+        else {
             return new JFileChooser();
         }
     }
 
-    public static void setLastDir(File file) {
+    public static void setLastDir(File file)
+    {
         lastDir = file.getParent();
     }
 }
