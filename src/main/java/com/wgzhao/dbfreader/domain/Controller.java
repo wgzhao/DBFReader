@@ -125,7 +125,7 @@ public enum Controller
     public void exportToSQL(File file)
     {
 
-        SQLExporter sqlExporter = new SQLExporter(file);
+        CsvExporter sqlExporter = new CsvExporter(file);
         Thread thread = new Thread(sqlExporter);
         thread.start();
     }
@@ -144,40 +144,6 @@ public enum Controller
         this.setSearching(false);
         this.loadFromOffset();
     }
-
-//    public void checkForUpdates( boolean silentOnNoUpdate ) {
-//
-//        Version currentVersion  = Config.getVersion();
-//        String  newVersionURL   = "http://giannivanhoecke.com/dev/dbf_reader_version.txt";
-//        String  releaseNotesURL = "http://giannivanhoecke.com/dev/dbf_reader_release_notes.html";
-//        String  downloadPageURL = "https://github.com/giannivh/DBFReader/releases";
-//        String  autoUpdaterURL  = "http://giannivanhoecke.com/dev/dbf_reader_file.txt";
-//
-//        JUpdateChecker jUpdateChecker =
-//                new JUpdateChecker(
-//                        TITLE,
-//                        currentVersion,
-//                        newVersionURL,
-//                        releaseNotesURL,
-//                        downloadPageURL,
-//                        null,
-//                        autoUpdaterURL
-//                );
-//
-//        try {
-//
-//            //Show gui...
-//            jUpdateChecker.checkForUpdates( silentOnNoUpdate );
-//        }
-//        catch( IOException e ) {
-//
-//            e.printStackTrace();
-//        }
-//        catch( InvalidVersionException e ) {
-//
-//            e.printStackTrace();
-//        }
-//    }
 
     @Override
     public void setUIEnabled(boolean enabled)

@@ -14,13 +14,13 @@ import java.nio.charset.Charset;
  * Date: 16/10/13
  * Time: 14:05
  */
-public class SQLExporter
+public class CsvExporter
         implements Runnable
 {
 
     private final File target;
 
-    public SQLExporter(File target)
+    public CsvExporter(File target)
     {
 
         this.target = target;

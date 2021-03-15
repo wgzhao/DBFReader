@@ -4,8 +4,12 @@
 
 package com.wgzhao.dbfreader.domain;
 
+import org.jamel.dbf.DbfReader;
+import org.jamel.dbf.structure.DbfField;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * User: gvhoecke <gianni.vanhoecke@lin-k.net>

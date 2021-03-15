@@ -111,7 +111,7 @@
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
                             <!--<finalName>${artifactId}-${version}</finalName>-->
-                            <appendAssemblyId>false</appendAssemblyId>
+                            <appendAssemblyId>true</appendAssemblyId>
                         </configuration>
                     </execution>
                 </executions>
@@ -127,7 +127,7 @@
                     <javaApplicationStub>src/main/resources/JavaApplicationStub</javaApplicationStub>
                     <additionalResources>
                         <fileSet>
-                            <directory>${basedir}</directory>
+                            <directory>app</directory>
                             <includes>
                                 <include>LICENSE</include>
                             </includes>

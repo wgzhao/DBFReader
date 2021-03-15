@@ -4,10 +4,15 @@
 
 package com.wgzhao.dbfreader.domain;
 
+import org.jamel.dbf.structure.DbfField;
+import org.jamel.dbf.structure.DbfRow;
+
 import javax.swing.JFileChooser;
 
 import java.io.File;
 import java.nio.charset.CharacterCodingException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * User: gvhoecke <gianni.vanhoecke@lin-k.net>
@@ -80,5 +85,40 @@ public class Utils
     public static void setLastDir(File file)
     {
         lastDir = file.getParent();
+    }
+
+    public static String getRecord(DbfField field, DbfRow row)
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String colName = field.getName();
+        if (row.getObject(colName) == null) {
+            return "";
+        }
+        else {
+            switch (field.getDataType()) {
+                case CHAR:
+                    return row.getString(colName);
+
+                case LOGICAL:
+                    return row.getBoolean(colName) ? "true" : "false";
+
+                case DATE:
+                    return simpleDateFormat.format(row.getDate(colName));
+
+                case NUMERIC:
+                    int scale = field.getDecimalCount();
+                    int precision = field.getFieldLength();
+                    if (scale == 0) {
+                        return String.valueOf(row.getLong(colName));
+                    }
+                    else {
+                        String pattern = "%" + precision + "." + scale + "f";
+                        return String.format(pattern, row.getBigDecimal(colName));
+                    }
+
+                default:
+                    return row.getObject(colName).toString();
+            }
+        }
     }
 }

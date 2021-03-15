@@ -4,6 +4,7 @@
 
 package com.wgzhao.dbfreader.domain;
 
+import com.wgzhao.dbfreader.DBFReader;
 import org.jamel.dbf.DbfReader;
 import org.jamel.dbf.structure.DbfField;
 import org.jamel.dbf.structure.DbfRow;
@@ -23,7 +24,7 @@ public class TableSearcher
 
     private final String searchString;
 
-    public TableSearcher(String searchString)
+    public TableSearcher(String searchString )
     {
 
         this.searchString = searchString;
@@ -32,8 +33,6 @@ public class TableSearcher
     @Override
     public void run()
     {
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try (DbfReader reader = new DbfReader(Controller.INSTANCE.getPath())) {
 
@@ -76,47 +75,14 @@ public class TableSearcher
                 List<String> recordValues = new ArrayList<>();
                 boolean hasHit = false;
                 for (DbfField field : fields) {
-                    String colName = field.getName();
-                    if (row.getObject(colName) != null) {
-                        String value = row.getString(colName);
-                        if (value.toLowerCase().contains(searchString.toLowerCase())) {
-                            hasHit = true;
-                            hitCount++;
-                        }
+                    String fieldValue = Utils.getRecord(field, row);
+                    if (fieldValue.toLowerCase().contains(searchString.toLowerCase())) {
+                        hasHit = true;
+                        hitCount++;
                     }
-                    if (row.getObject(colName) == null) {
-                        recordValues.add("");
-                    }
-                    else {
-                        switch (field.getDataType()) {
-                            case CHAR:
-                                recordValues.add(row.getString(colName));
-                                break;
-
-                            case LOGICAL:
-                                recordValues.add(row.getBoolean(colName) ? "true" : "false");
-                                break;
-
-                            case DATE:
-                                recordValues.add(simpleDateFormat.format(row.getDate(colName)));
-                                break;
-
-                            case NUMERIC:
-                                recordValues.add(row.getBigDecimal(colName).toPlainString());
-                                break;
-
-                            case FLOAT:
-                                recordValues.add(String.format("%f", row.getFloat(colName)));
-                                break;
-
-                            default:
-                                recordValues.add(row.getObject(colName).toString());
-                                break;
-                        }
-                    }
+                    recordValues.add(fieldValue);
                 }
                 if (hasHit) {
-
                     Controller.INSTANCE.addRecord(recordValues);
                     Controller.INSTANCE.setSearchResults(String.format("Search results for \"%s\" " +
                             "(%d hit%s)", searchString, hitCount, hitCount == 1 ? "" : "s"));

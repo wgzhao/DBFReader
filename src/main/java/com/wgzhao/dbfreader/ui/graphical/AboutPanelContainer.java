@@ -81,7 +81,7 @@ public class AboutPanelContainer
                         "<p>By Gianni Van Hoecke &lt;gianni.vh@gmail.com&gt;</p><br />" +
                         "<p>This app uses:</p>" +
                         "<ul style=\"font-size: small; margin: 15px;\">" +
-                        "<li>DANS DBF Library<br /><span style=\"font-size: x-small;\">(http://dans-dbf-lib.sourceforge.net/)</span></li>" +
+                        "<li>Jamel DBF Library<br /><span style=\"font-size: x-small;\">(https://github.com/jamel/dbf)</span></li>" +
                         "<li>Mono Icons<br /><span style=\"font-size: x-small;\">(http://www.tutorial9.net/downloads/108-mono-icons-huge-set-of-minimal-icons/)</span></li>" +
                         "<li>Receptionist icon<br /><span style=\"font-size: x-small;\">(https://www.iconfinder.com/icons/40094/receptionist_icon)</span></li>" +
                         "</ul>" +

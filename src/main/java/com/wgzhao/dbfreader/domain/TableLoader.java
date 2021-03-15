@@ -104,37 +104,7 @@ public class TableLoader
                 DbfRow row = reader.nextRow();
                 List<String> recordValues = new ArrayList<>();
                 for (DbfField field : fields) {
-                    String colName = field.getName();
-                    if (row.getObject(colName) == null) {
-                        recordValues.add("");
-                    }
-                    else {
-                        switch (field.getDataType()) {
-                            case CHAR:
-                                recordValues.add(row.getString(colName));
-                                break;
-
-                            case LOGICAL:
-                                recordValues.add(row.getBoolean(colName) ? "true" : "false");
-                                break;
-
-                            case DATE:
-                                recordValues.add(simpleDateFormat.format(row.getDate(colName)));
-                                break;
-
-                            case NUMERIC:
-                                recordValues.add(row.getBigDecimal(colName).toPlainString());
-                                break;
-
-                            case FLOAT:
-                                recordValues.add(String.format("%f", row.getFloat(colName)));
-                                break;
-
-                            default:
-                                recordValues.add(row.getObject(colName).toString());
-                                break;
-                        }
-                    }
+                    recordValues.add(Utils.getRecord(field, row));
                 }
 
                 Controller.INSTANCE.addRecord(recordValues);
